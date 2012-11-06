@@ -1,5 +1,6 @@
 {
-  import the wmonitorx.dll and the wcapturex.dll to your project
+  import the wmonitorx.dll and the wcapturex
+  .dll to your project
   from component -> import component
   in order to work properly, you should check the option "create wrapper class"
   when you import the wmonitorx.dll
@@ -139,18 +140,32 @@ var
   wResult : IWResult;
 begin
 
-  if (id = nHotkeyCaretId) or (id = nHotkeyCursorId) or (id = nHotkeySelectedtextId) then
+  if (id <> nHotkeyCaretId) and (id <> nHotkeyCursorId) and (id <> nHotkeySelectedtextId) then Exit;
+
+  wResult := CoWResult.Create;
+  if(id = nHotkeyCaretID) then
   begin
-    wResult := CoWResult.Create;
-    PerformCapture(wResult, hwnd, x1, y1, x1, y1);
-
-    // do something with the result
-
-    clickedWord.Text := wResult.Text;
-    leftContext.Text := wResult.LeftContext;
-    rightContext.Text := wResult.RightContext;
-    paragraph.Text := wResult.Paragraph;
+    wCapture.GetCaretInfo(hwnd, x1, y1);
   end;
+  if(id = nHotkeyCursorID) then
+  begin
+    wCapture.GetCursorInfo(hwnd, x1, y1);
+  end;
+  if(id = nHotkeySelectedTextId) then
+  begin
+        x1 := -1;
+        y1 := -1;
+  end;
+
+  PerformCapture(wResult, hwnd, x1, y1, x1, y1);
+
+  // do something with the result
+
+  clickedWord.Text := wResult.Text;
+  leftContext.Text := wResult.LeftContext;
+  rightContext.Text := wResult.RightContext;
+  paragraph.Text := wResult.Paragraph;
+
 
 end;
 
@@ -219,6 +234,12 @@ begin
 	// set the getContext flag
 	wOptions := wOptions or wCaptureOptionsGetContext;
 
+  // if x1, y1 are -1 then add capture selected text flag
+  if(x1 = -1) and (y1 = -1) then
+  begin
+    wOptions := wOptions or wCaptureOptionsGetSelectedText;
+  end;
+
 	//set capture parameters
 	objInput.Hwnd := hwnd;
 	objInput.StartX := x1;
@@ -234,7 +255,10 @@ begin
 	wResult := wCapture.Capture(objInput);
 
 	// get the text from the capture
-	strResult := wResult.Text;
+  if(wResult <> nil) then
+  begin
+  	strResult := wResult.Text;
+  end;
 
 
 	//use OCR if native method fails
