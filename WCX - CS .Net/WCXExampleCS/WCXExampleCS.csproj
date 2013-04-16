@@ -69,8 +69,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WordCapture, Version=1.0.4126.32188, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WordCapture.5.0.1538\lib\WordCapture.dll</HintPath>
+    <Reference Include="WordCapture, Version=5.0.4602.28268, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WordCapture.6.0.1\lib\WordCapture.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +83,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WordCaptureSample.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
