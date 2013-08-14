@@ -218,7 +218,7 @@ LRESULT CtestDlg::OnCaptureNotification(WPARAM wParam, LPARAM lParam)
 	if (NULL != lpEvent)
 	{
 		CComPtr<IWResult> objResult;
-		PerformCapture((HWND)(LONG_PTR)lpEvent->hWnd, CPoint(lpEvent->x1, lpEvent->y1), CPoint(lpEvent->x2, lpEvent->y2), objResult);
+		PerformCapture((HWND)(LONG_PTR)lpEvent->hWnd, CPoint(lpEvent->x1, lpEvent->y1), CPoint(lpEvent->x2, lpEvent->y2), objResult, FALSE);
 		
 		// do something with the result
 		ProcessResult(objResult);
@@ -239,19 +239,19 @@ LRESULT CtestDlg::OnCaptureNotificationHotkey(WPARAM wParam, LPARAM lParam)
     {
         if (S_OK == g_wCapture->GetCursorInfo(&hWnd, &x, &y))
 		{
-           PerformCapture((HWND)(LONG_PTR)hWnd, CPoint(x, y), CPoint(x, y), objResult);
+           PerformCapture((HWND)(LONG_PTR)hWnd, CPoint(x, y), CPoint(x, y), objResult, FALSE);
 		}
 	}
     else if (g_nHotkeyCaretId == lpEvent->id)
     {
         if (S_OK == g_wCapture->GetCaretInfo(&hWnd, &x, &y))
 		{
-            PerformCapture((HWND)(LONG_PTR)hWnd, CPoint(x, y), CPoint(x, y), objResult);
+            PerformCapture((HWND)(LONG_PTR)hWnd, CPoint(x, y), CPoint(x, y), objResult, FALSE);
 		}
 	}
     else if (g_nHotkeySelectedTextId == lpEvent->id)
     {
-		PerformCapture((HWND)(LONG_PTR)hWnd, CPoint(x, y), CPoint(x, y), objResult);
+		PerformCapture((HWND)(LONG_PTR)hWnd, CPoint(x, y), CPoint(x, y), objResult, TRUE);
     }
 
 	// do something with the result
@@ -310,7 +310,7 @@ void CtestDlg::StartMonitoring()
 	g_wMonitor->Start3(nModifier, nKey, &g_nHotkeySelectedTextId);
 }
 
-void CtestDlg::PerformCapture(HWND hWnd, const CPoint &pt1, const CPoint &pt2, CComPtr<IWResult> &objResult)
+void CtestDlg::PerformCapture(HWND hWnd, const CPoint &pt1, const CPoint &pt2, CComPtr<IWResult> &objResult, BOOL bCaptureSelectedTextOnly)
 {
 	CComPtr<IWInput> objInput;
 	HRESULT hRes = objInput.CoCreateInstance(CLSID_WInput);
@@ -325,6 +325,11 @@ void CtestDlg::PerformCapture(HWND hWnd, const CPoint &pt1, const CPoint &pt2, C
 	// set the getContext flag
 	wOptions |= wCaptureOptionsGetContext;
 	
+	if(bCaptureSelectedTextOnly)
+	{
+		wOptions |= wCaptureOptionsGetSelectedText;
+	}
+
 	//set capture parameters
 	objInput->Hwnd = (LONG)(LONG_PTR)hWnd;
 	objInput->StartX = pt1.x;

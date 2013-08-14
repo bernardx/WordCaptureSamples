@@ -47,7 +47,7 @@ public:
 	void ReleaseObjects();
 	void ProcessResult(CComPtr<IWResult> objResult);
 	void StartMonitoring();
-	void PerformCapture(HWND hWnd, const CPoint &pt1, const CPoint &pt2, CComPtr<IWResult> &objResult);
+	void PerformCapture(HWND hWnd, const CPoint &pt1, const CPoint &pt2, CComPtr<IWResult> &objResult, BOOL bCaptureSelectedTextOnly);
 	LRESULT OnCaptureNotification(WPARAM wParam, LPARAM lParam);
 	LRESULT OnCaptureNotificationHotkey(WPARAM wParam, LPARAM lParam);
 	
