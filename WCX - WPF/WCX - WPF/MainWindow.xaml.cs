@@ -313,5 +313,10 @@ namespace WCX
             return hwnd;
         }
 
+        private void WCXExample_Closing(object sender, CancelEventArgs e)
+        {
+            m_wCapture.EndCaptureSession();
+        }
+
     }
 }
