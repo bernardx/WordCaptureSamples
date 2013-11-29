@@ -182,6 +182,23 @@ namespace WCXExampleCS
             paragraphTxt.Text = objResult.Paragraph;
         }
 
+        private void CaptureHotkey(int hwnd, int x, int y, int id)
+        {
+            if (id == m_nHotkeyCaretId)
+            {
+                m_wCapture.GetCaretInfo(out hwnd, out x, out y);
+            }
+            else if (id == m_nHotkeyCursorId)
+            {
+                m_wCapture.GetCursorInfo(out hwnd, out x, out y);
+            }
+            else if (id == m_nHotkeySelectedTextId)
+            {
+                x = 0; y = 0;
+            }
+            CaptureEvent(hwnd, x, y, x, y);
+        }
+
         private void CaptureFullText(int x, int y)
         {
             UIControl spUIC = ComFactory.Instance.NewUIControl();
@@ -199,6 +216,7 @@ namespace WCXExampleCS
         {
             StartMonitoring();
             m_wMonitor.WEvent += new _IWMonitorXEvents_WEventEventHandler(CaptureEvent);
+            m_wMonitor.WEventHotkey += new _IWMonitorXEvents_WEventHotkeyEventHandler(CaptureHotkey);
         }
 
         private void Form1_Unload(object sender, EventArgs e)
